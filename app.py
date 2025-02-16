@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for 
+from flask import Flask, render_template, redirect, url_for, request
 import pymongo
 
 app = Flask(__name__) 
@@ -10,10 +10,25 @@ def home():
     dbs = list(filter(lambda x: (x!= 'config' and x!= 'local' and x!= 'admin'),myclient.list_database_names()))
     return render_template("index.html",databases= dbs ) 
 
-@app.route("/db/<db_name>") 
-def db(db_name): 
-	database = db_name
-	return render_template("edit_db.html", database=db_name) 
+@app.route("/database/<db_name>", methods=['GET']) 
+def db_edit(db_name): 
+    database = db_name
+    return render_template("edit_db.html", database=db_name) 
+
+@app.route("/database", methods=['POST']) 
+def db_create(): 
+    print('Got Request to create database')
+    print('database name: '+request.form['database'])
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient[request.form['database']]
+    mycol = mydb[request.form['collection']]
+	#create data so mongodb actually create collection
+    mydict = { "message": "Hello World", "author":"James Bond" }
+    x = mycol.insert_one(mydict)
+	#delete data, so the collection is empty
+    myquery = { "message": "Hello World" }
+    mycol.delete_one(myquery)
+    return redirect(url_for('home')) 
 
 @app.route("/default") 
 def default(): 
