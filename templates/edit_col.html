@@ -1,7 +1,7 @@
 {% extends "layout.html" %} 
 		{% block content %} 
         <br/>
-        <h4>Selected db/col: {{database}},{{collection}}</h4> 
+        <h4>Selected [db]col: [{{database}}]{{collection}}</h4> 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Workspaces</a></li>
@@ -10,5 +10,24 @@
             </ol>
         </nav>
         <br/>
-
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Object</th>
+                <th scope="col">View</th>
+                <th scope="col">Drop?</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for doc in documents%} 
+              <tr>
+                <th scope="row">{{ loop.index0 }}</th>
+                <td>{{doc}}</td>
+                <td><a class="btn btn-info" role="button">View Document</a></td>
+                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCollection" data-bs-database="{{database}}" data-bs-collection="{{col}}">Delete Document</button></td>
+              </tr>
+              {% endfor %} 
+            </tbody>
+          </table>
 {% endblock %} 

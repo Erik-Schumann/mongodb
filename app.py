@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 import pymongo
+from bson.json_util import dumps
 
 app = Flask(__name__) 
 
@@ -33,7 +34,10 @@ def col_edit(db_name, col_name):
         database = db_name
         myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         mydb = myclient[db_name]
-        return render_template("edit_col.html", database=db_name, collection =col_name) 
+        mycol = mydb[col_name]
+        documents = mycol.find({})
+        print(documents)
+        return render_template("edit_col.html", database=db_name, collection =col_name, documents = list(mycol.find({}))) 
 
 
 @app.route("/database", methods=['POST']) 
