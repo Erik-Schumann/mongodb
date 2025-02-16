@@ -1,0 +1,12 @@
+{% extends "layout.html" %} 
+		{% block content %} 
+        <br/>
+        <h4>Open Workspace</h4>
+		<ul> 
+            <h5>{{dbs}}</h5>
+             {% for db in databases%} 
+            <li><a href="/db/{{db}}"> Database: {{db}} </a></li> 
+            {% endfor %} 
+		</ul> 
+
+{% endblock %} 
