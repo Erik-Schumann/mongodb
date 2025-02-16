@@ -1,0 +1,114 @@
+{% extends "layout.html" %} 
+		{% block content %} 
+        <br/>
+        <div class="row">
+            <div class="col-md-auto">
+                <h4>Database {{database}}</h4>
+            </div>
+            <div class="col-xxl">
+             
+            </div>
+            <div class="col-md-auto">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createCollection">Add Collection</button>
+            </div>
+          </div>
+        </div>
+        <br/>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/database/{{database}}">{{database}}</a></li>
+            </ol>
+        </nav>
+        <br/>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Collection</th>
+                <th scope="col">Open?</th>
+                <th scope="col">Drop?</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for col in collections%} 
+              <tr>
+                <th scope="row">{{ loop.index0 }}</th>
+                <td>{{col}}</td>
+                <td><a class="btn btn-info" href="/{{database}}/{{col}}" role="button">Open Collection</a></td>
+                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCollection" data-bs-database="{{database}}" data-bs-collection="{{col}}">Delete Collection</button></td>
+              </tr>
+              {% endfor %} 
+            </tbody>
+          </table>
+          <div class="row">
+            <div class="modal fade modal-xl" id="createCollection" tabindex="-1">
+                <div class="modal-dialog  modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" >Create Collection</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST">
+                    <div class="modal-body">
+                        
+                            <label for="collection">Collection:</label>
+                            <input type="text"
+                            name="collection"
+                            placeholder="Collection">
+                            <input type="hidden"
+                            name="type"
+                            value = "create">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="modal fade modal-xl" id="deleteCollection" tabindex="-1">
+            <div class="modal-dialog  modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Delete Collection</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" ">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="collection" class="col-form-label">Collection:</label>
+                        <input type="text" class="form-control" name="collection" disables readonly>
+                        <input type="hidden"
+                        name="type"
+                        value = "delete">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+            </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+            
+
+            const exampleModal = document.getElementById('deleteCollection')
+                if (exampleModal) {
+                exampleModal.addEventListener('show.bs.modal', event => {
+                    // Button that triggered the modal
+                    const button = event.relatedTarget
+                    // Extract info from data-bs-* attributes
+                    const collection = button.getAttribute('data-bs-collection')
+
+                    const modalBodyInput = exampleModal.querySelector('.modal-body input')
+                    modalBodyInput.value = collection
+                })
+                }
+        </script>
+{% endblock %} 

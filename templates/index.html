@@ -9,7 +9,7 @@
              
             </div>
             <div class="col-md-auto">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createWorkspace">Add Workspace</button>
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createDatabase">Add Database</button>
             </div>
           </div>
         </div>
@@ -28,32 +28,30 @@
               <tr>
                 <th scope="row">{{ loop.index0 }}</th>
                 <td>{{db}}</td>
-                <td><a class="btn btn-info" href="/database/{{db}}" role="button">Open Database</a></td>
-                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWorkspace" data-bs-database="{{db}}">Delete Database</button></td>
+                <td><a class="btn btn-info" href="/{{db}}" role="button">Open Database</a></td>
+                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDatabase" data-bs-database="{{db}}">Delete Database</button></td>
               </tr>
               {% endfor %} 
             </tbody>
           </table>
         <div class="row">
-        <div class="modal fade modal-xl" id="createWorkspace" tabindex="-1">
+        <div class="modal fade modal-xl" id="createDatabase" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" >Create Database</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="/database">
+                <form method="POST">
                 <div class="modal-body">
                     
                         <label for="database">Database:</label>
                         <input type="text"
                         name="database"
                         placeholder="Database">
-                        <br/>
-                        <label for="collection">Collection:</label>
-                        <input type="text"
-                        name="collection"
-                        placeholder="Collection">
+                        <input type="hidden"
+                        name="type"
+                        value = "create">
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -64,18 +62,21 @@
             </div>
           </div>
         </div>
-        <div class="modal fade modal-xl" id="deleteWorkspace" tabindex="-1">
+        <div class="modal fade modal-xl" id="deleteDatabase" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">Delete Database</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="/database/{{db}}">
+                <form method="POST" action="/{{db}}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="database" class="col-form-label">Database:</label>
-                        <input type="text" class="form-control" id="database" disables readonly>
+                        <input type="text" class="form-control" name="database" disables readonly>
+                        <input type="hidden"
+                        name="type"
+                        value = "delete">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -88,19 +89,16 @@
           </div>
         </div>
         <script>
-            const exampleModal = document.getElementById('deleteWorkspace')
+            	const exampleModal = document.getElementById('deleteDatabase')
                 if (exampleModal) {
                 exampleModal.addEventListener('show.bs.modal', event => {
                     // Button that triggered the modal
                     const button = event.relatedTarget
                     // Extract info from data-bs-* attributes
                     const database = button.getAttribute('data-bs-database')
-                    // If necessary, you could initiate an Ajax request here
-                    // and then do the updating in a callback.
+                    //add database name to input
                     const modalBodyInput = exampleModal.querySelector('.modal-body input')
                     modalBodyInput.value = database
-                    const modalBodyForm = exampleModal.querySelector('.modal-content form')
-                    modalBodyForm.action = '/database/'+database
                 })
                 }
         </script>
