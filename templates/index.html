@@ -3,28 +3,43 @@
         <br/>
         <div class="row">
             <div class="col-md-auto">
-                <h4>Open Workspace</h4>
+                <h4>Workspace Overview</h4>
             </div>
             <div class="col-xxl">
              
             </div>
-            <div class="col-md-2">
+            <div class="col-md-auto">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createWorkspace">Add Workspace</button>
             </div>
           </div>
         </div>
-		<ul> 
-            <h5>{{dbs}}</h5>
-             {% for db in databases%} 
-            <li><a href="/database/{{db}}"> Database: {{db}} </a></li> 
-            {% endfor %} 
-		</ul> 
+        <br/>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Database</th>
+                <th scope="col">Open?</th>
+                <th scope="col">Drop?</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for db in databases%} 
+              <tr>
+                <th scope="row">{{ loop.index0 }}</th>
+                <td>{{db}}</td>
+                <td><a class="btn btn-info" href="/database/{{db}}" role="button">Open Database</a></td>
+                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWorkspace" data-bs-database="{{db}}">Delete Database</button></td>
+              </tr>
+              {% endfor %} 
+            </tbody>
+          </table>
         <div class="row">
         <div class="modal fade modal-xl" id="createWorkspace" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <h5 class="modal-title" >Create Database</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" action="/database">
@@ -42,11 +57,51 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
               </div>
             </div>
           </div>
         </div>
+        <div class="modal fade modal-xl" id="deleteWorkspace" tabindex="-1">
+            <div class="modal-dialog  modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Delete Database</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="/database/{{db}}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="database" class="col-form-label">Database:</label>
+                        <input type="text" class="form-control" id="database" disables readonly>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+            </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+            const exampleModal = document.getElementById('deleteWorkspace')
+                if (exampleModal) {
+                exampleModal.addEventListener('show.bs.modal', event => {
+                    // Button that triggered the modal
+                    const button = event.relatedTarget
+                    // Extract info from data-bs-* attributes
+                    const database = button.getAttribute('data-bs-database')
+                    // If necessary, you could initiate an Ajax request here
+                    // and then do the updating in a callback.
+                    const modalBodyInput = exampleModal.querySelector('.modal-body input')
+                    modalBodyInput.value = database
+                    const modalBodyForm = exampleModal.querySelector('.modal-content form')
+                    modalBodyForm.action = '/database/'+database
+                })
+                }
+        </script>
 {% endblock %} 

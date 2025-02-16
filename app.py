@@ -10,10 +10,16 @@ def home():
     dbs = list(filter(lambda x: (x!= 'config' and x!= 'local' and x!= 'admin'),myclient.list_database_names()))
     return render_template("index.html",databases= dbs ) 
 
-@app.route("/database/<db_name>", methods=['GET']) 
-def db_edit(db_name): 
-    database = db_name
-    return render_template("edit_db.html", database=db_name) 
+@app.route("/database/<db_name>", methods=['GET','POST']) 
+def db_edit(db_name):
+    if request.method=='POST': 
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        myclient.drop_database(db_name)
+        return redirect(url_for('home')) 
+    else: 
+        database = db_name
+        return render_template("edit_db.html", database=db_name) 
+
 
 @app.route("/database", methods=['POST']) 
 def db_create(): 
