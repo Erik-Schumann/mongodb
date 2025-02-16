@@ -1,12 +1,12 @@
 {% extends "layout.html" %} 
 		{% block content %} 
         <br/>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Workspaces</a></li>
+              <li class="breadcrumb-item"><a href="/db/{{database}}">{{database}}</a></li>
+            </ol>
+          </nav>
         <h3>Selected db: {{database}}</h3> 
-		<ul> 
-			<li><a href="default"> Check Layout(Inheritance) </a></li> 
-			<li><a href="/variable"> Try Variable Example </a></li> 
-			<li><a href="/if"> Try If-else Example </a></li> 
-			<li><a href="/for"> Try For Example </a></li> 
-			<li><a href="/url"> Try URL Example </a></li> 
-		</ul> 
+
 {% endblock %} 
