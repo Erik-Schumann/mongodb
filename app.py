@@ -18,7 +18,22 @@ def db_edit(db_name):
         return redirect(url_for('home')) 
     else: 
         database = db_name
-        return render_template("edit_db.html", database=db_name) 
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mydb = myclient[db_name]
+        return render_template("edit_db.html", database=db_name, collections =mydb.list_collection_names()) 
+	
+@app.route("/database/<db_name>/<col_name>", methods=['GET','POST']) 
+def col_edit(db_name, col_name):
+    if request.method=='POST': 
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mydb = myclient[db_name]
+        mydb.drop_collection(col_name)
+        return redirect(url_for('db_edit')) 
+    else: 
+        database = db_name
+        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        mydb = myclient[db_name]
+        return render_template("edit_col.html", database=db_name, collection =col_name) 
 
 
 @app.route("/database", methods=['POST']) 

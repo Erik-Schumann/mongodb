@@ -1,0 +1,14 @@
+{% extends "layout.html" %} 
+		{% block content %} 
+        <br/>
+        <h4>Selected db/col: {{database}},{{collection}}</h4> 
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Workspaces</a></li>
+              <li class="breadcrumb-item"><a href="/database/{{database}}">{{database}}</a></li>
+              <li class="breadcrumb-item"><a href="/database/{{database}}/{{collection}}">{{collection}}</a></li>
+            </ol>
+        </nav>
+        <br/>
+
+{% endblock %} 

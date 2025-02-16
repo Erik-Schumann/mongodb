@@ -1,12 +1,33 @@
 {% extends "layout.html" %} 
 		{% block content %} 
         <br/>
+        <h4>Selected db: {{database}}</h4> 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Workspaces</a></li>
               <li class="breadcrumb-item"><a href="/database/{{database}}">{{database}}</a></li>
             </ol>
-          </nav>
-        <h3>Selected db: {{database}}</h3> 
+        </nav>
+        <br/>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Collection</th>
+                <th scope="col">Open?</th>
+                <th scope="col">Drop?</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for col in collections%} 
+              <tr>
+                <th scope="row">{{ loop.index0 }}</th>
+                <td>{{col}}</td>
+                <td><a class="btn btn-info" href="/database/{{database}}/{{col}}" role="button">Open Collection</a></td>
+                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCollection" data-bs-database="{{database}}" data-bs-collection="{{col}}">Delete Collection</button></td>
+              </tr>
+              {% endfor %} 
+            </tbody>
+          </table>
 
 {% endblock %} 
