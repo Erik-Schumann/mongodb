@@ -40,7 +40,7 @@
                         <th scope="row">{{ loop.index0 }}</th>
                         <td>{{doc}}</td>
                         <td><a class="btn btn-info" role="button">View Document</a></td>
-                        <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCollection" data-bs-database="{{database}}" data-bs-collection="{{col}}">Delete Document</button></td>
+                        <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDocument" data-bs-database="{{database}}" data-bs-collection="{{col}}" data-bs-document="{{doc._id}}"" data-bs-document_text="{{doc}}">Delete Document</button></td>
                       </tr>
                       {% endfor %} 
                     </tbody>
@@ -52,4 +52,81 @@
             </div>
           </div>
 
+          <div class="modal fade modal-xl" id="createDocument" tabindex="-1">
+            <div class="modal-dialog  modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" >Create Document</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST">
+                <div class="modal-body">
+                        <input type="hidden"
+                        name="type"
+                        value = "create">
+                        <div class="mb-3">
+                          <label for="document" class="form-label">Document</label>
+                          <textarea class="form-control"  name="document" id="document" rows="3" >
+{
+  "testattribute":"value"
+}</textarea>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade modal-xl" id="deleteDocument" tabindex="-1">
+            <div class="modal-dialog  modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Delete Document</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="collection" class="col-form-label">Document:</label>
+                        <input type="text" class="form-control" name="document" readonly>
+                        <label for="collection" class="col-form-label">Document Content:</label>
+                        <textarea class="form-control"  name="document_text" id="document_text" rows="3" readonly></textarea>
+                        <input type="hidden"
+                        name="type"
+                        value = "delete">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+            </form>
+              </div>
+            </div>
+          </div>
+
+
+          <script>
+            
+
+            const exampleModal = document.getElementById('deleteDocument')
+                if (exampleModal) {
+                exampleModal.addEventListener('show.bs.modal', event => {
+                    // Button that triggered the modal
+                    const button = event.relatedTarget;
+                    // Extract info from data-bs-* attributes
+                    const document = button.getAttribute('data-bs-document');
+                    const document_text = button.getAttribute('data-bs-document_text');
+                    const text_input = exampleModal.querySelectorAll('.modal-body input');
+                    text_input[0].value = document;
+
+                    const textarea_input = exampleModal.querySelectorAll('.modal-body textarea');
+                    textarea_input[0].value = document_text.replaceAll(",", ",\n");;
+                })
+                }
+        </script>
 {% endblock %} 

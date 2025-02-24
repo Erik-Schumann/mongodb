@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request
 import pymongo, json
 from bson.json_util import dumps
-from bson.json_util import dumps
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
@@ -60,15 +60,21 @@ def collection(database, collection):
         doc = request.form['document']
         if type =='create':
             try:
-                data = json.load(doc)
-                print(data)
-                mycol.insert_one(data)
+                data = json.loads(doc.replace("\r", "").replace("\n", "").replace(" ",""))
+                result = mycol.insert_one(data)
+                print('Document was successfully added: '+str(result.inserted_id))
             except:
                 print('invalid json')
         if type =='update':
             mycol.update_one(doc)
         if type =='delete':
-            mycol.delete_one(doc)
+            query = {'_id': ObjectId(doc)}
+            result = mycol.delete_one(query)
+            # Check if the document was deleted
+            if result.deleted_count > 0:
+                print("Document deleted successfully: "+ str(doc))
+            else:
+                print("No document found with the given ID.")
     docs = list(mycol.find({}))
     return render_template("collection.html",database= database,collection= collection, documents = docs ) 
 
