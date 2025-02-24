@@ -39,15 +39,18 @@
                       <tr>
                         <th scope="row">{{ loop.index0 }}</th>
                         <td>{{doc}}</td>
-                        <td><a class="btn btn-info" role="button">View Document</a></td>
-                        <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDocument" data-bs-database="{{database}}" data-bs-collection="{{col}}" data-bs-document="{{doc._id}}"" data-bs-document_text="{{doc}}">Delete Document</button></td>
+                        <td><button type="button" class="btn btn-info" role="button" data-bs-document_text="{{doc}}", data-bs-document="{{doc._id}}" onclick="viewDocument()">View Document</button></td>
+                        <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDocument" data-bs-database="{{database}}" data-bs-collection="{{col}}" data-bs-document="{{doc._id}}" data-bs-document_text="{{doc}}">Delete Document</button></td>
                       </tr>
                       {% endfor %} 
                     </tbody>
                   </table>
               </div>
               <div class="col">
-                Editor
+                <label for="document_editor" class="form-label">Document</label>
+                <br/>
+                <textarea rows="1" cols="80" id="document_editor_doc_id" placeholder="Document Id" readonly></textarea>
+                <textarea rows="20" cols="80" id="document_editor" placeholder="Select document first"></textarea>
               </div>
             </div>
           </div>
@@ -108,7 +111,17 @@
               </div>
             </div>
           </div>
-
+          <script>
+            function viewDocument() {
+              const button = event.target;
+              const document_id = button.getAttribute('data-bs-document');
+              const document_text = button.getAttribute('data-bs-document_text');
+              var document_editor_doc_id = document.getElementById("document_editor_doc_id");
+              var document_editor = document.getElementById("document_editor");
+              document_editor_doc_id.value = document_id;
+              document_editor.value = document_text.replaceAll(",", ",\n");
+        }
+          </script>
 
           <script>
             
@@ -125,7 +138,7 @@
                     text_input[0].value = document;
 
                     const textarea_input = exampleModal.querySelectorAll('.modal-body textarea');
-                    textarea_input[0].value = document_text.replaceAll(",", ",\n");;
+                    textarea_input[0].value = document_text.replaceAll(",", ",\n");
                 })
                 }
         </script>

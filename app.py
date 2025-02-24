@@ -76,6 +76,9 @@ def collection(database, collection):
             else:
                 print("No document found with the given ID.")
     docs = list(mycol.find({}))
+    for doc in docs:
+        print(doc['_id'])
+        doc['_id'] = str(doc['_id'])
     return render_template("collection.html",database= database,collection= collection, documents = docs ) 
 
 if __name__ == "__main__": 
