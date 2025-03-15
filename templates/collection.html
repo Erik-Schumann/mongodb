@@ -1,5 +1,15 @@
 {% extends "layout.html" %} 
-		{% block content %} 
+		{% block content %}
+    {% with messages = get_flashed_messages(with_categories=true)%}
+{% if messages%}
+{% for category, message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="notifications">
+      <strong>{{category}}: </strong> {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {%endif%}
+    {%endwith%} 
         <br/>
         <div class="row">
             <div class="col-md-auto">
@@ -51,6 +61,7 @@
                 <br/>
                 <textarea rows="1" cols="80" id="document_editor_doc_id" placeholder="Document Id" readonly></textarea>
                 <textarea rows="20" cols="80" id="document_editor" placeholder="Select document first"></textarea>
+                <button class="btn btn-info">Update Document</button>
               </div>
             </div>
           </div>
@@ -122,10 +133,7 @@
               document_editor.value = document_text.replaceAll(",", ",\n");
         }
           </script>
-
           <script>
-            
-
             const exampleModal = document.getElementById('deleteDocument')
                 if (exampleModal) {
                 exampleModal.addEventListener('show.bs.modal', event => {

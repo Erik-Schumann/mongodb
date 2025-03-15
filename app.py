@@ -1,9 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 import pymongo, json
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 @app.route("/", methods=['POST','GET']) 
@@ -65,6 +66,7 @@ def collection(database, collection):
                 print('Document was successfully added: '+str(result.inserted_id))
             except:
                 print('invalid json')
+                flash("Invalid json",'error')
         if type =='update':
             mycol.update_one(doc)
         if type =='delete':
@@ -75,6 +77,7 @@ def collection(database, collection):
                 print("Document deleted successfully: "+ str(doc))
             else:
                 print("No document found with the given ID.")
+                flash("Document not found, ignored delete request", 'warning')
     docs = list(mycol.find({}))
     for doc in docs:
         print(doc['_id'])
