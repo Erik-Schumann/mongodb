@@ -33,7 +33,7 @@
         </nav>
         <br/>
         <div class="container text-center">
-            <div class="row align-items-start">
+            <div class="row">
               <div class="col">
                 <table class="table">
                     <thead>
@@ -57,15 +57,31 @@
                   </table>
               </div>
               <div class="col">
+                <form method="POST">
                 <label for="document_editor" class="form-label">Document</label>
                 <br/>
-                <textarea rows="1" cols="80" id="document_editor_doc_id" placeholder="Document Id" readonly></textarea>
-                <textarea rows="20" cols="80" id="document_editor" placeholder="Select document first"></textarea>
-                <button class="btn btn-info">Update Document</button>
+                {% if selected_id%}
+                <textarea rows="1" cols="60" id="document_editor_doc_id" name="document_editor_doc_id" placeholder="Document Id" readonly>{{selected_id}}</textarea>
+                <textarea rows="20" cols="60" id="document_editor" name="document_editor" placeholder="Select document first">{{selected_doc}}</textarea>
+                {% else %}
+                <textarea rows="1" cols="60" id="document_editor_doc_id" name="document_editor_doc_id" placeholder="Document Id" readonly></textarea>
+                <textarea rows="20" cols="60" id="document_editor" name="document_editor" placeholder="Select document first"></textarea>
+                {%endif%}
+                <input type="hidden"
+                name="type"
+                value = "update">
+                <input type="hidden"
+                  name="action"
+                  value = "single">
+                <br>
+                <button class="btn btn-info" type="submit">Update Document</button>
+              </form>
               </div>
             </div>
           </div>
 
+        </div>
+      </div>
           <div class="modal fade modal-xl" id="createDocument" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered">
               <div class="modal-content">
@@ -123,6 +139,13 @@
             </div>
           </div>
           <script>
+            function structure_doc_input() {
+              var document_editor = document.getElementById("document_editor");
+              const document_text = document_editor.value;
+              document_editor.value = document_text.replaceAll(",", ",");
+            }
+          </script>
+          <script>
             function viewDocument() {
               const button = event.target;
               const document_id = button.getAttribute('data-bs-document');
@@ -144,7 +167,6 @@
                     const document_text = button.getAttribute('data-bs-document_text');
                     const text_input = exampleModal.querySelectorAll('.modal-body input');
                     text_input[0].value = document;
-
                     const textarea_input = exampleModal.querySelectorAll('.modal-body textarea');
                     textarea_input[0].value = document_text.replaceAll(",", ",\n");
                 })

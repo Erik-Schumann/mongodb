@@ -1,7 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-import pymongo, json
+import pymongo, json, ast
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+import collections  # From Python standard library.
+import bson
+from bson.codec_options import CodecOptions
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -56,9 +59,15 @@ def collection(database, collection):
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
     mydb = myclient[database] 
     mycol = mydb[collection]
+    id = False
+
     if request.method =='POST':
         type = request.form['type']
-        doc = request.form['document']
+        try:
+            doc = request.form['document']
+        except:
+            selected_doc = request.form['document_editor']
+            selected_id = request.form['document_editor_doc_id']
         if type =='create':
             try:
                 data = json.loads(doc.replace("\r", "").replace("\n", "").replace(" ",""))
@@ -68,7 +77,25 @@ def collection(database, collection):
                 print('invalid json')
                 flash("Invalid json",'error')
         if type =='update':
-            mycol.update_one(doc)
+            print('received update request for id: '+ selected_id)
+            print('received update request for doc:'+selected_doc)
+            try:
+                update_doc = ast.literal_eval(selected_doc)
+                update_doc["_id"] = ObjectId(selected_id)
+                result = mycol.replace_one({'_id': ObjectId(selected_id)},update_doc)
+                if(result.modified_count == 0):
+                    info = 'no updates were made, because there was no change'
+                else:
+                    info = 'successfully modified '+ str(result.modified_count) + ' documents'
+                flash(info, 'info')
+            except:
+                flash('something went wrong, please check if document is valid', 'error')
+            docs = list(mycol.find({}))
+            for doc in docs:
+                print(doc['_id'])
+                doc['_id'] = str(doc['_id'])
+            return render_template("collection.html",database= database,collection= collection, documents = docs, selected_id= selected_id, selected_doc = selected_doc ) 
+
         if type =='delete':
             query = {'_id': ObjectId(doc)}
             result = mycol.delete_one(query)
