@@ -71,15 +71,53 @@
                 name="type"
                 value = "update">
                 <input type="hidden"
-                  name="action"
+                  name="scope"
                   value = "single">
                 <br>
                 <button class="btn btn-info" type="submit">Update Document</button>
               </form>
               </div>
+              <div class="col">
+                <label>Bulk Update</label>
+                <div class="col">
+                  <form method="POST">
+                  {% if selected_filter%}
+                  <label for="document_filter" class="form-label">Filter Criteria</label><br>
+                  <textarea rows="5" id="document_filter" name="document_filter" placeholder="Describe Filter Criteria" >{{selected_filter}}</textarea><br>
+                  <label for="document_update" class="form-label">Update</label><br>
+                  <textarea rows="7"  id="document_update" name="document_update" placeholder="Describe Update Criteria">{{selected_update}}</textarea><br>
+                  <label for="document_action" class="form-label">Actions</label><br>
+                  <textarea rows="7"  id="document_actions" name="document_action" placeholder="Describe Actions">{{selected_actions}}</textarea>
+                  
+                  {% else %}
+                  <label for="document_filter" class="form-label">Filter Criteria</label><br>
+                  <textarea rows="5" id="document_filter" name="document_filter" placeholder="Describe Filter Criteria" >
+{
+  'filterattr':'value'
+}</textarea>
+                  <br>
+                  <label for="document_update" class="form-label">Update</label><br>
+                  <textarea rows="7"  id="document_update" name="document_update" placeholder="Describe Update Criteria">
+{
+  'updateattr':'value'
+}</textarea><br>
+                  <label for="document_action" class="form-label">Actions</label><br>
+                  <textarea rows="6"  id="document_actions" name="document_action" placeholder="Describe Actions">merge: field1 + field2 = field3</textarea>
+                  
+                  {%endif%}
+                  <input type="hidden"
+                  name="type"
+                  value = "update">
+                  <input type="hidden"
+                    name="scope"
+                    value = "multiple">
+      <br>
+                  <button class="btn btn-info" type="submit">Update Documents</button>
+                </form>
+              </div>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
           <div class="modal fade modal-xl" id="createDocument" tabindex="-1">
