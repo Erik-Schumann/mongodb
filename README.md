@@ -11,6 +11,6 @@ Import a dataset/Have a nosql database and operate on it
   o Conditional updates of several fields  
   
 Future developements include but are not limited to:  
-• Addsupportfortransactionsandsavepoints   
+• Add supportfortransactionsandsavepoints   
 • Add support for nested and dynamic structures  
-• Addsupportfor authentication(/authorization)  
+• Add supportfor authentication(/authorization)  
